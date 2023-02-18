@@ -24,6 +24,8 @@ Added the task script in the .yaml file.
 
 Next day I tried to start the environment and it wouldn't recognise my region no matter what I tried. 
 
+It kept saying `Provided region_name '“us-east-1”' doesn't match a supported format.`
+
 I tried resetting the env vars by taking the keys etc out of the quotation marks. 
 
 I tried `unset AWS_...` for each variable. 
@@ -50,6 +52,52 @@ I followed the AWS document to [install AWS CLI on Windows]() and ran the `msiex
 Checked the version by running `aws --version`
 
 Ran `aws configure`
+
+And now in the final hour I figured out the gitpod. It was the quotation marks!
+
+So just to summarise. I ran the installation commands:
+
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+```
+Added the environment variables:
+
+```
+export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+export AWS_DEFAULT_REGION=us-west-2`
+
+````
+Typed the command:
+
+````
+aws sts get-caller-identity
+
+`````
+
+My credentials were returned! I then saved those credentials into the environment with the `gp env`command for each of the environment variables.
+
+I copy pasted the task into the `.gitpod.yaml`file:
+
+```
+
+tasks:
+  - name: aws-cli
+    env:
+      AWS_CLI_AUTO_PROMPT: on-partial
+    init: |
+      cd /workspace
+      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      unzip awscliv2.zip
+      sudo ./aws/install
+      cd $THEIA_WORKSPACE_ROOT
+ ```
+ Commited and pushed them to Github. Opened another Github page and clicked the Gitpod button and voila, the environment loaded. 
+ 
+ I checked that my credentials were there with `aws sts get-caller-identity` and YASS it was there :)
 
 ### Create an Admin User
 
