@@ -53,10 +53,20 @@ Ran `aws configure`
 
 ### Create an Admin User
 
-### Use Cloudshell
+Created a new user because my user created prior to the bootcamp had admin access which is not good for security. Created a group and added an Admin policy to the group:
+
+![UserGroupAdmin](assets/UserGroupAdmin.png)
 
 ### Create a Billing Alarm
 
+Created a Billing Alarm:
+
+![BillingAlarm](assets/Alerts.png)
+
 ### Create a Budget
+
+Created a budget:
+
+![Budget](assets/Budget.png)
 
 # Homework Challenges
