@@ -149,5 +149,5 @@ Then I ran `docker ps`to get the Container ID but because it was not running the
 IndentationError: unexpected indent
 ```
 
-This indicated that I had an identation error in my code, which I found in line 4 in my `notifications_activities.py`file and I corrected that and it worked! :)
+This indicated that I had an identation error in my code, which I found in line 5 in my `notifications_activities.py`file and I corrected that and it worked! :)
 
