@@ -76,6 +76,78 @@ python3 -m flask run --host=0.0.0.0 --port=4567
 ]
 ````
 
+## Build a Container:
 
- 
- 
+```docker build -t  backend-flask ./backend-flask```
+
+## Run the Container:
+
+```docker run --rm -p 4567:4567 -it backend-flask
+FRONTEND_URL="*" BACKEND_URL="*" docker run --rm -p 4567:4567 -it backend-flask
+export FRONTEND_URL="*"
+export BACKEND_URL="*"
+docker run --rm -p 4567:4567 -it -e FRONTEND_URL='*' -e BACKEND_URL='*' backend-flask
+docker run --rm -p 4567:4567 -it  -e FRONTEND_URL -e BACKEND_URL backend-flask
+unset FRONTEND_URL="*"
+unset BACKEND_URL="*"
+````
+
+
+
+
+
+## Troubleshooting
+
+Left my laptop open and Gitpod shut down. When I logged back in and started everything up, the text was missing from the Cruddur app page:
+
+
+![Text Missing](assets/TextMissing(1).png)
+
+Tried `compose restart`
+
+![Compose Restart](assets/ComposeRestart.png)
+
+Then I checked to see if the ports were on and open:
+
+![NotFound](assets/4567NotFound.png) ![Found 4567 Not Running](assets/Found4567NotRunning.png)
+
+Then I ran `docker ps`to get the Container ID but because it was not running there was no ID so then I ran `docker ps -a` which shows all Containers regardless if they are on or not and used that to run `docker logs` to see what issues there were.
+
+```Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/local/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/usr/local/lib/python3.10/site-packages/flask/main.py", line 3, in <module>
+    main()
+  File "/usr/local/lib/python3.10/site-packages/flask/cli.py", line 1050, in main
+    cli.main()
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, ctx.params)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(*args, kwargs)
+  File "/usr/local/lib/python3.10/site-packages/click/decorators.py", line 84, in new_func
+    return ctx.invoke(f, obj, args, **kwargs)
+  File "/usr/local/lib/python3.10/site-packages/click/core.py", line 760, in invoke
+    return __callback(args, *kwargs)
+  File "/usr/local/lib/python3.10/site-packages/flask/cli.py", line 911, in run_command
+    raise e from None
+  File "/usr/local/lib/python3.10/site-packages/flask/cli.py", line 897, in run_command
+    app = info.load_app()
+  File "/usr/local/lib/python3.10/site-packages/flask/cli.py", line 312, in load_app
+    app = locate_app(import_name, None, raise_if_not_found=False)
+  File "/usr/local/lib/python3.10/site-packages/flask/cli.py", line 218, in locate_app
+    import(module_name)
+  File "/backend-flask/app.py", line 7, in <module>
+    from services.notifications_activities import
+  File "/backend-flask/services/notifications_activities.py", line 5
+    results = [{
+IndentationError: unexpected indent
+```
+
+This indicated that I had an identation error in my code, which I found in line 4 in my `notifications_activities.py`file and I corrected that and it worked! :)
+
