@@ -99,8 +99,7 @@ unset BACKEND_URL="*"
 
 ## Run Container in the background:
 
-```docker container run --rm -p 4567:4567 -d backend-flask
-````
+`docker container run --rm -p 4567:4567 -d backend-flask`
 
 ## Run `npm install`:
 
@@ -306,17 +305,17 @@ def data_notifications():
   return data, 200
   ```
   
-• add a `notifications.py`file in `backend-flask/services``
+## Changed code in `home_activities.py`file in `backend-flask/services``
 
 ```python
 from datetime import datetime, timedelta, timezone
-class NotificationsActivities:
+class HomeActivities:
   def run():
     now = datetime.now(timezone.utc).astimezone()
     results = [{
       'uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
-      'handle':  'Andrew Brown',
-      'message': 'Cloud is very fun!',
+      'handle':  'Klaus Schwab',
+      'message': 'Eat ze bugs!',
       'created_at': (now - timedelta(days=2)).isoformat(),
       'expires_at': (now + timedelta(days=5)).isoformat(),
       'likes_count': 5,
@@ -332,10 +331,73 @@ class NotificationsActivities:
         'reposts_count': 0,
         'created_at': (now - timedelta(days=2)).isoformat()
       }],
+    },
+    {
+      'uuid': '66e12864-8c26-4c3a-9658-95a10f8fea67',
+      'handle':  'Worf',
+      'message': 'I am out of prune juice',
+      'created_at': (now - timedelta(days=7)).isoformat(),
+      'expires_at': (now + timedelta(days=9)).isoformat(),
+      'likes': 0,
+      'replies': []
+    },
+    {
+      'uuid': '248959df-3079-4947-b847-9e0892d1bab4',
+      'handle':  'Garek',
+      'message': 'My dear doctor, I am just simple tailor',
+      'created_at': (now - timedelta(hours=1)).isoformat(),
+      'expires_at': (now + timedelta(hours=12)).isoformat(),
+      'likes': 0,
+      'replies': []
     }
     ]
     return results
  ```
+ 
+ Changed 2 lines to reflect different user and comment on home page:
+ 
+ ```python
+  'handle':  'Klaus Schwab',
+      'message': 'Eat ze bugs!',
+ ```
+ 
+ ![Klaus Schwab](assets/klausschwab.png)
+
+ 
+ ## Add Notifications Feed to `app.js`file:
+ 
+ ````js
+ import NotificationsFeedPage from './pages/NotificationsFeedPage';
+````
+
+Then add:
+
+```js
+{
+    path: "/notifications",
+    element: <NotificationsFeedPage />
+  },
+```
+ ## Add Notifications code in `NotificationFeedPage.js`:
+ 
+ ```js
+ const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/notifications`
+ ```
+ ```js
+ export default function NotificationsFeedPage() {
+ ```
+ ```js
+ <DesktopNavigation user={user} active={'notifications'} setPopped={setPopped} />
+ ```
+ ```js
+ title="Notifications" 
+ ```
+ 
+
+
+
+
+ 
  
  
 
