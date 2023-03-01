@@ -398,18 +398,19 @@ Then add:
  ## Snyk Open Source
  
  • Cloned ExamPro repo and called it `awscloudgirl/aws-bootcamp-cruddur-2023-security`
- • Created a Snyk account and connected it to this repo
+ • Created a Snyk account at: https://https://app.snyk.io/login and connected it to this repo
  
  ![SnykAccount](assets/SnykAccount.png)
  
  • Installed Snyk CLI in gitpod with my key:
  
- ![SnykInstall](assets/SnykInstall.png)
- 
  ```bash
  nmp install -g snyk
  snyk auth #####key#####
  ```
+ 
+ ![SnykInstall](assets/SnykInstall.png)
+ 
  Ran few commands in `backend-flask`:
  
  ```bash
