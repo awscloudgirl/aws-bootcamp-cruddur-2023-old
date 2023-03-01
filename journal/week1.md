@@ -393,8 +393,103 @@ Then add:
  title="Notifications" 
  ```
  
+ # Security
+ 
+ ## Snyk Open Source
+ 
+ • Cloned ExamPro repo and called it `awscloudgirl/aws-bootcamp-cruddur-2023-security`
+ • Created a Snyk account and connected it to this repo
+ 
+ ![SnykAccount](assets/SnykAccount.png)
+ 
+ • Installed Snyk CLI in gitpod with my key:
+ 
+ ![SnykInstall](assets/SnykInstall.png)
+ 
+ ```bash
+ nmp install -g snyk
+ snyk auth #####key#####
+ ```
+ Ran few commands in `backend-flask`:
+ 
+ ```bash
+ cd ..
+ snyk test
+ 
+ Required packages missing: flask, flask-cors
 
+ Please run `pip install -r requirements.txt`. If the issue persists try again with --skip-unresolved.
 
+ snyk monitor
+ 
+ Monitoring /workspace/aws-bootcamp-cruddur-2023-security/backend-flask...
+
+ Required packages missing: flask, flask-cors
+
+ Please run `pip install -r requirements.txt`. If the issue persists try again with --skip-unresolved.
+ 
+ snyk help
+ 
+ CLI help
+  Snyk CLI scans and monitors your projects for security vulnerabilities and license issues.
+
+  For more information visit the Snyk website https://snyk.io
+
+  For details see the CLI documentation https://docs.snyk.io/features/snyk-cli
+
+How to get started
+  1. Authenticate by running snyk auth
+  2. Test your local project with snyk test
+  3. Get alerted for new vulnerabilities with snyk monitor
+
+Available commands
+  To learn more about each Snyk CLI command, use the --help option, for example, snyk auth --help.
+
+  Note: The help on the docs site is the same as the --help in the CLI.
+
+  snyk auth
+    Authenticate Snyk CLI with a Snyk account.
+
+  snyk test
+    Test a project for open source vulnerabilities and license issues.
+
+    Note: Use snyk test --unmanaged to scan all files for known open source dependencies (C/C++
+    only).
+
+  snyk monitor
+    Snapshot and continuously monitor a project for open source vulnerabilities and license issues.
+
+  snyk container
+    Test container images for vulnerabilities.
+
+  snyk iac
+    Commands to find and manage security issues in Infrastructure as Code files.
+
+  snyk code
+    Find security issues using static code analysis.
+
+  snyk log4shell
+    Find Log4Shell vulnerability.
+
+  snyk config
+    Manage Snyk CLI configuration.
+
+  snyk policy
+    Display the .snyk policy for a package.
+
+  snyk ignore
+    Modify the .snyk policy to ignore stated issues.
+
+Debug
+  Use -d option to output the debug logs.
+
+Configure the Snyk CLI
+  You can use environment variables to configure the Snyk CLI and also set variables to configure the
+  Snyk CLI to connect with the Snyk API. See Configure the Snyk CLI 
+  https://docs.snyk.io/features/snyk-cli/configure-the-snyk-cli
+  ```
+  
+ Documentation for Snyk CLI: https://docs.snyk.io/snyk-cli/getting-started-with-the-cli
 
 
  
