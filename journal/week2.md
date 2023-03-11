@@ -397,4 +397,6 @@ def init_rollbar():
 ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
 ```
 
+## Test successful!
 
+![Rollbar](assets/rollbar.png)
