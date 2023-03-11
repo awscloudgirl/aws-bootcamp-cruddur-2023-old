@@ -91,7 +91,7 @@ RequestsInstrumentor().instrument()
  Added what seems like missing code (maybe I deleted it):
  
  ```python
- simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
+simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
 provider.add_span_processor(simple_processor)
 ```
 
@@ -207,4 +207,93 @@ aws xray create-sampling-rule --cli-input-json file://aws/json/xray.json
 ## Rule created in `cloudwatch > settings > X-Ray traces > Sampling Groups`:
 
 ![Rule](assets/rule.png)
+
+# Add Daemon to `docker-compose.yml` file:
+
+```yaml
+xray-daemon:
+    image: "amazon/aws-xray-daemon"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "us-east-1"
+    command:
+      - "xray -o -b xray-daemon:2000"
+    ports:
+      - 2000:2000/udp
+      ```
+      
+## Then add some env vars to the `docker-compose.yml` file:
+
+```yaml
+      AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
+      AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
+```
+
+Then did `compose up` but ports `backend(4567)` and `xray-daemon(2000)` were not on. However, `xray-daemon(2000)` was showing on. So moved:
+
+```yaml
+XRayMiddleware(app, xray_recorder)
+```
+
+Still not working! So I looked at the docker logs saw a few errors in syntax but still couldn't quite fix it, doing `docker compose up` a few times. Killed my environment and booted it up again. Still no progress...
+
+Ran `docker logs` on `backend-flask` and it gave back this error:
+
+```bash
+File "/backend-flask/app.py", line 40, in <module>
+    simple_processor = SimpleSpanProcessor(ConsoleSpanExporter())
+NameError: name 'SimpleSpanProcessor' is not defined. Did you mean: 'BatchSpanProcessor'?
+```
+Then I had an aha moment and took out the code that I thought was missing from earlier and it worked!
+
+![worked](assets/worked.png)
+
+## Checked `X-Ray traces` in `Cloudwatch`:
+
+![tracesyes](assets/tracesyes.png)
+
+# Cloudwatch Logs
+
+## Add 'watchtower' to `requirements.txt':
+
+```python
+watchtower
+```
+
+## Then run:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Add in `app.py`:
+
+```python
+import watchtower
+import logging
+from time import strftime
+```
+
+```python
+# Configuring Logger to Use CloudWatch
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+LOGGER.addHandler(console_handler)
+LOGGER.addHandler(cw_handler)
+LOGGER.info("some message")
+```
+
+```python
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    LOGGER.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
+ ```
+ 
+ 
+
 
