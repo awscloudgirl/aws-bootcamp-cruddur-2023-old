@@ -115,5 +115,33 @@ const signOut = async () => {
 }
 ```
 
+When I did `docker compose up` the homepage was not showing so did some troubleshooting, changed env vars and it worked.
+
+## Add to `SigninPage.js`:
+
+```javascript
+import { Auth } from 'aws-amplify';
+
+const [cognitoErrors, setCognitoErrors] = React.useState('');
+
+const onsubmit = async (event) => {
+    setErrors('')
+    event.preventDefault();
+    Auth.signIn(email, password)
+    .then(user => {
+      console.log('user',user)
+      localStorage.setItem("access_token", user.signInUserSession.accessToken.jwtToken)
+      window.location.href = "/"
+    })
+    .catch(error => { 
+      if (error.code == 'UserNotConfirmedException') {
+        window.location.href = "/confirm"
+      }
+      setErrors(error.message)
+    });
+    return false
+```
+
+Tried sign in and it threw up this error:
 
 
