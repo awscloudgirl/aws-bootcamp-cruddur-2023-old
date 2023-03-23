@@ -29,6 +29,14 @@ export default function SigninPage() {
     });
     return false
   }
+
+  const email_onchange = (event) => {
+    setEmail(event.target.value);
+  }
+  const password_onchange = (event) => {
+    setPassword(event.target.value);
+  }
+
   
   let el_errors;
   if (errors){
