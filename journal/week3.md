@@ -144,4 +144,45 @@ const onsubmit = async (event) => {
 
 Tried sign in and it threw up this error:
 
+![error](assets/error.png)
+
+I asked on discord, and this is a key thing for me to remember, check Andrews code in Github when it goes wrong :)
+
+Had some missed code, maybe I closed without commiting and updating Github (I did).
+
+Added:
+
+```javascript
+}
+
+  const email_onchange = (event) => {
+    setEmail(event.target.value);
+  }
+  const password_onchange = (event) => {
+    setPassword(event.target.value);
+  }
+```
+
+It worked!! :)
+
+# Creat user in Cognito:
+
+## In AWS console:
+
+• Go to `Cognito`
+
+• Click on `User pools`
+
+• Click on `Create user`
+
+• Check `Email`
+
+• Add a username
+
+• Add an email address
+
+• Add a password
+
+• Click `Create user`
+
 
