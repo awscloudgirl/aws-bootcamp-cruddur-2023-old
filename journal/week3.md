@@ -185,4 +185,107 @@ It worked!! :)
 
 • Click `Create user`
 
+## In Gitpod CLI:
+
+```bash
+aws cognito-idp admin-set-user-password --username awscloudgirl --password AmatuAllaah313! --user-pool-id us-east-1_hyl9rJbt1 --permanent
+```
+# Update `SignupPage.js`:
+
+```javascript
+import { Auth } from 'aws-amplify';
+
+const onsubmit = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    try {
+      const { user } = await Auth.signUp({
+        username: email,
+        password: password,
+        attributes: {
+          name: name,
+          email: email,
+          preferred_username: username,
+        },
+        autoSignIn: { // optional - enables auto sign in after user is confirmed
+          enabled: true,
+        }
+      });
+      console.log(user);
+      window.location.href = `/confirm?email=${email}`
+    } catch (error) {
+        console.log(error);
+        setErrors(error.message)
+    }
+    return false
+  }
+```
+
+## Update `ConfirmationPage.js`:
+
+```javascript
+import { Auth } from 'aws-amplify';
+
+const resend_code = async (event) => {
+  setErrors('')
+  try {
+    await Auth.resendSignUp(email);
+    console.log('code resent successfully');
+    setCodeSent(true)
+  } catch (err) {
+    // does not return a code
+    // does cognito always return english
+    // for this to be an okay match?
+    console.log(err)
+    if (err.message == 'Username cannot be empty'){
+      ssetErrors("You need to provide an email in order to send Resend Activiation Code")   
+    } else if (err.message == "Username/client id combination not found."){
+      setErrors("Email is invalid or cannot be found.")   
+    }
+  }
+}
+
+  const onsubmit = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    try {
+      await Auth.confirmSignUp(email, code);
+      window.location.href = "/"
+    } catch (error) {
+      setErrors(error.message)
+    }
+    return false
+  }
+```
+
+Had to delete my user pool and make a fresh one then got the confirmation page and email. Entered the code but it wasn't letting me press the button. Checked the inspect and I had not changed all the `SetCognitoErrors` to `SetErrors`. Changed them and it signed in.
+
+# Update `RecoveryPage.js`:
+
+```javascript
+import { Auth } from 'aws-amplify';
+
+const onsubmit_send_code = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    Auth.forgotPassword(username)
+    .then((data) => setFormState('confirm_code') )
+    .catch((err) => setErrors(err.message) );
+    return false
+  }
+  const onsubmit_confirm_code = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    if (password == passwordAgain){
+      Auth.forgotPasswordSubmit(username, code, password)
+      .then((data) => setFormState('success'))
+      .catch((err) => setErrors(err.message) );
+    } else {
+      setErrors('Passwords do not match')
+    }
+    return false
+  }
+```
+
+Checked the page and it sent the passowrd reset code. Changed it and it worked. Signed in successfully.
 
