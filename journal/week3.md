@@ -430,6 +430,6 @@ class CognitoJwtToken:
         return claims
 ```
 
-
+I logged out in Cruddur and logged back in and checked the logs and noticed that I am not getting authentication. So I checked my `app.py` code and realised that some is missing because I got very confused on what should be added not added and left.
 
 
